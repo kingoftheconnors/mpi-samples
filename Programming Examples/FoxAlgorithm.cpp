@@ -1,5 +1,3 @@
-//module load openmpi-x86_64
-
 #include <stdio.h>
 #include "mpi.h"
 
@@ -19,6 +17,8 @@ int main(int argc, char *argv[])
   };
   //Answer matrix. Starts empty
   int C[MATRIX_SIZE][MATRIX_SIZE] = { {0} };
+
+  //Initialize MPI
   MPI_Init(&argc,&argv);
   MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
   MPI_Comm_rank(MPI_COMM_WORLD, &myid);
@@ -31,17 +31,17 @@ int main(int argc, char *argv[])
 
   //initialize status for receiving and variables-to-send
   MPI_Status status;
-  int aVar = 0;
-  int bVar = 0;
+  int aVar = 0;  int bVar = 0;
 
-  MPI_Scatter(A, 1, MPI_INT, &aVar, 1, MPI_INT, 0, MPI_COMM_WORLD);
-  MPI_Scatter(B, 1, MPI_INT, &bVar, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(A, 1, MPI_INT, &aVar, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(B, 1, MPI_INT, &bVar, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-  //Create Communicators
+  //Create Communicators for each row
   int myRow = myid/MATRIX_SIZE;
   MPI_Comm rowComm;
   MPI_Comm_split(MPI_COMM_WORLD, myRow, myid, &rowComm);
-  //Initialize temp variables used in Roll Back
+
+  //Setup loop variables
   int myA = aVar;
   int tempB = 0; int stageRoot = 0;
   //Fox Algorithm Loop
@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
   //Reduce all values into a single answer to rank 0
   int finalC[MATRIX_SIZE][MATRIX_SIZE] = { {0} };
   MPI_Reduce(&C, &finalC, MATRIX_SIZE*MATRIX_SIZE, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
   //Rank 0 prints final answer
   if(myid==0) {
      for(int i=0; i<MATRIX_SIZE; i++) {
@@ -73,6 +74,8 @@ int main(int argc, char *argv[])
 	printf("\n");
      }
   }
+
+  //Cleanup and Terminate
   MPI_Comm_free(&rowComm);
   MPI_Finalize();
   return 0;
