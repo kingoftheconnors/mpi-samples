@@ -36,32 +36,6 @@ int main(int argc, char *argv[])
 
   MPI_Scatter(A, 1, MPI_INT, &aVar, 1, MPI_INT, 0, MPI_COMM_WORLD);
   MPI_Scatter(B, 1, MPI_INT, &bVar, 1, MPI_INT, 0, MPI_COMM_WORLD);
-  printf("Rank %d now has A: %d\n", myid, aVar);
-  printf("Rank %d now has B: %d\n", myid, bVar);
-  //Broadcast
-  //if (myid == 0) {
-    //row
-    //for(int i=0; i<MATRIX_SIZE; i++) {
-      //column
-      //for(int j=0; j<MATRIX_SIZE; j++) {
-	//Rank 0 will be process for 0,0. Skip sending to Rank 0
-	//if(i==0 && j==0) {
-	//  j++;
-        //}
-        //aVar = A[i][j];
-        //bVar = B[i][j];
-        //MPI_Send(&aVar, 1, MPI_INT, (i*MATRIX_SIZE)+j, 0, MPI_COMM_WORLD);
-        //MPI_Send(&bVar, 1, MPI_INT, (i*MATRIX_SIZE)+j, 1, MPI_COMM_WORLD);
-      //}
-    //}
-    //Set aVar for rank 0
-    //aVar = A[0][0];
-  //}
-  //else {
-      //Receive info
-      //MPI_Recv(&aVar, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
-      //MPI_Recv(&bVar, 1, MPI_INT, 0, 1, MPI_COMM_WORLD, &status);
-  //}
 
   //Create Communicators
   int myRow = myid/MATRIX_SIZE;
