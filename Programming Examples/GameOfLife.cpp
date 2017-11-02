@@ -65,10 +65,13 @@ int main() {
 		}
 	    }
 	}
+    //Finished first for loop. Start new line
     printf("\n");
     }
+    //Prepare for next frame
     printf("\n\n\n");
     active = nextActive;
+    //Wait before making next frame
     sleep(1);
     }
 }
