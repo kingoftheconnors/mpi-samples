@@ -12,10 +12,10 @@
 
 class Dense_Matrix {
 	public:
-                Dense_Matrix (int _N) : values(new double[_N*_N]), N(_N) {}
-                Dense_Matrix (const Dense_Matrix& former) : values(new double(former.N*former.N)), N(former.N) //values(new double(*(former.values)))
+              Dense_Matrix (int _N, int _M) : values(new double[_N*_M]), N(_N), M(_M) {}
+              Dense_Matrix (const Dense_Matrix& former) : values(new double(former.N*former.M)), N(former.N), M(former.M) //values(new double(*(former.values)))
 		{
-			memcpy(values, former.values, N*N*sizeof(double));
+			memcpy(values, former.values, N*M*sizeof(double));
 		}
 
 		//Destructor
@@ -26,26 +26,31 @@ class Dense_Matrix {
 		double& operator()(int i, int j) {
 			return *(values+i*N+j);
 		}
+		double operator()(int i, int j) const {
+			return *(values+i*N+j);
+		}
 		//Copy Operator
 		Dense_Matrix& operator=(const Dense_Matrix& former) {
-		  if(N != former.N)
+		  if(N != former.N || M != former.M)
 		  {
 		     delete[] values;
 		     N = former.N;
+		     M = former.M;
 		     values = new double[N*N];
 		  }
 
-		  memcpy(values, former.values, N*N*sizeof(double));
+		  memcpy(values, former.values, N*M*sizeof(double));
 		  return *this;
 		}
 
 		//accessors:
-	        //int rows() {return M;}
-		int cols() {return N;}
+	        int getRows() {return M;}
+		int getCols() {return N;}
 
 	private:
 		double* values;
 		int N;
+		int M;
 };
 
 #endif /* DENSEMATRIX_H_ */
