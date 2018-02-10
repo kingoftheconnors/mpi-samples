@@ -10,47 +10,70 @@
 #include <cstring>
 #include <iostream>
 
+template <typename T>
 class Dense_Matrix {
 	public:
               Dense_Matrix (int _N, int _M) : values(new double[_N*_M]), N(_N), M(_M) {}
-              Dense_Matrix (const Dense_Matrix& former) : values(new double(former.N*former.M)), N(former.N), M(former.M) //values(new double(*(former.values)))
+              Dense_Matrix (const Dense_Matrix<T>& former) : values(new T(former.rows()*former.cols())), N(former.rows()), M(former.cols()) //values(new double(*(former.values)))
 		{
-			memcpy(values, former.values, N*M*sizeof(double));
+			memcpy(values, former.values, N*M*sizeof(T));
 		}
 
-		//Destructor
+               //Copy constructor for if the templates are different types
+               template <typename S>
+                Dense_Matrix (const Dense_Matrix<S>& former) : values(new S(former.rows()*former.cols())), N(former.rows()), M(former.cols()) //values(new double(*(former.values)))
+		{
+			memcpy(values, former.values, N*M*sizeof(S));
+		}
+
+                //Destructor
 		virtual ~Dense_Matrix() {
 			delete[] values;
 		}
-		//Accessors
-		double& operator()(int i, int j) {
-			return *(values+i*N+j);
-		}
-		double operator()(int i, int j) const {
-			return *(values+i*N+j);
-		}
+		
 		//Copy Operator
-		Dense_Matrix& operator=(const Dense_Matrix& former) {
-		  if(N != former.N || M != former.M)
+		Dense_Matrix& operator=(const Dense_Matrix<T>& former) {
+		  if(N != former.rows() || M != former.cols())
 		  {
 		     delete[] values;
-		     N = former.N;
-		     M = former.M;
-		     values = new double[N*N];
+		     N = former.rows();
+		     M = former.cols();
+		     values = new T[N*N];
 		  }
 
-		  memcpy(values, former.values, N*M*sizeof(double));
+		  memcpy(values, former.values, N*M*sizeof(T));
 		  return *this;
 		}
 
-		//accessors:
-	        int getRows() {return M;}
-		int getCols() {return N;}
+		//Cross-Type Copy Operator
+	       template <typename S>
+		Dense_Matrix& operator=(const Dense_Matrix<S>& former) {
+		  if(N != former.rows() || M != former.cols())
+		  {
+		     delete[] values;
+		     N = former.rows();
+		     M = former.cols();
+		     values = new S[N*N];
+		  }
+
+		  memcpy(values, former.values, N*M*sizeof(S));
+		  return *this;
+		}
+
+		//Accessors
+		T& operator()(int i, int j) {
+			return *(values+i*N+j);
+		}
+		T operator()(int i, int j) const {
+			return *(values+i*N+j);
+		}
+
+	        int rows() const {return N;}
+		int cols() const {return M;}
 
 	private:
-		double* values;
-		int N;
-		int M;
+		T* values;
+		int N, M;
 };
 
 #endif /* DENSEMATRIX_H_ */
