@@ -13,7 +13,7 @@
 template <typename T>
 class Dense_Matrix {
 	public:
-              Dense_Matrix (int _N, int _M) : values(new double[_N*_M]), N(_N), M(_M) {}
+              Dense_Matrix (int _N, int _M) : values(new T[_N*_M]), N(_N), M(_M) {}
               Dense_Matrix (const Dense_Matrix<T>& former) : values(new T(former.rows()*former.cols())), N(former.rows()), M(former.cols()) //values(new double(*(former.values)))
 		{
 			memcpy(values, former.values, N*M*sizeof(T));
@@ -38,7 +38,7 @@ class Dense_Matrix {
 		     delete[] values;
 		     N = former.rows();
 		     M = former.cols();
-		     values = new T[N*N];
+		     values = new T[N*M];
 		  }
 
 		  memcpy(values, former.values, N*M*sizeof(T));
@@ -53,7 +53,7 @@ class Dense_Matrix {
 		     delete[] values;
 		     N = former.rows();
 		     M = former.cols();
-		     values = new S[N*N];
+		     values = new S[N*M];
 		  }
 
 		  memcpy(values, former.values, N*M*sizeof(S));

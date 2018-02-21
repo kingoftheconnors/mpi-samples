@@ -10,18 +10,19 @@ int Multiply(Dense_Matrix<T> &C, const Dense_Matrix<T> &A, const Dense_Matrix<T>
     return -1;
   }
 
-  for(int i=0; i<A.getCols(); i++) {
-    for(int j=0; j<A.getRows(); j++) {
+  for(int i=0; i<C.rows(); i++) {
+    for(int j=0; j<C.cols(); j++) {
       T temp = (T) 0.0;
-        for(int k=0; k<B.getRows(); k++) {
+        for(int k=0; k<B.rows(); k++) {
 	//A=Row-Oriented and B=Row-Oriented
-	temp += A(i, j) * B(j, k);
+	temp += A(i, k) * B(k, j);
       }
-	
-      C(i,k) = temp;
+      
+      C(i,j) = temp;
     }  
   }
 
     return 1;
 }
 
+template int Multiply(Dense_Matrix<double> &C, const Dense_Matrix<double> &A, const Dense_Matrix<double> &B);

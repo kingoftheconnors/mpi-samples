@@ -6,14 +6,13 @@ using namespace std;
 template <typename T>
 void output_Dense_Matrix(const Dense_Matrix<T> &A)
 {
-  for(int i=0; i<A.rows(); i++)
+  for(int i=0; i<A.rows(); ++i)
   {
-    for(int j=0; j<A.rows(); j++)
+    for(int j=0; j<A.cols(); ++j)
     {
-      cout<< A(i,j) << j++;
       cout << A(i,j) << " ";
-      cout << endl;
     }
+    cout << endl;
   }
 }
 
