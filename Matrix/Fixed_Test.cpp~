@@ -1,0 +1,16 @@
+
+#include "Fixed_Matrix.h"
+
+using namespace std;
+
+int main() {
+  Fixed_Matrix<double, 2, 2> First();
+  //First(0,0)=1; First(0,1)=0;
+  //First(1,0)=0; First(1,1)=1;
+  
+  cout << "Matrix:"<<endl;
+  cout << First << endl;
+  //cout << First(0,0);
+
+  return 0;
+}
